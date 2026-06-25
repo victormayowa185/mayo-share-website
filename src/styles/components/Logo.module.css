@@ -1,0 +1,32 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.image {
+  height: 50px;
+  width: auto;
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.mayo {
+  font-weight: 700;
+  font-size: 25px;
+  letter-spacing: -0.2px;
+  color: var(--text-main);
+}
+
+.share {
+  font-weight: 800;
+  font-size: 25px;
+  color: var(--text-sub);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}

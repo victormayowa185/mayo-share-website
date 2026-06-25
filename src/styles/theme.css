@@ -1,0 +1,37 @@
+/* Import Mulish Font */
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+:root {
+  --primary-color: #7C3EFF;
+  --bg-color: #ffffff;
+  --text-main: #1d1d1f;
+  --text-sub: #6e6e73;
+  /* Glass effect colors */
+  --nav-bg: transparent;
+  --nav-border: transparent;
+  --nav-shadow: none;
+  
+  --transition-speed: 0.4s;
+  --apple-curve: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme='dark'] {
+  --bg-color: #050505;
+  --text-main: #f5f5f7;
+  --text-sub: #a1a1a6;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  /* Apply Mulish Everywhere */
+  font-family: 'Mulish', sans-serif;
+  transition: background-color var(--transition-speed) var(--apple-curve);
+  -webkit-font-smoothing: antialiased;
+}

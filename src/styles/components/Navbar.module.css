@@ -1,3 +1,4 @@
+/* --- Desktop & Base Styles --- */
 .mainHeader {
   position: fixed;
   top: 0;
@@ -16,7 +17,7 @@
   background: rgba(var(--bg-rgb, 255, 255, 255), 0.7);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
@@ -25,41 +26,28 @@
 }
 
 .navContainer {
-  width: 92%;
-  max-width: 1250px;
+  width: 100%;
+  padding: 0 20px;    /* Breathing room on the sides */
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.logoLink {
-  text-decoration: none;
-}
-
-.navRight {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-}
-
-.desktopLinks {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-}
+.logoLink { text-decoration: none; }
+.navRight { display: flex; align-items: center; gap: 25px; }
+.desktopLinks { display: flex; align-items: center; gap: 30px; }
 
 .navLink {
   text-decoration: none;
   color: var(--text-main);
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.5px;
 }
 
-/* Language Pill Styling */
 .langPill, .langPillMobile {
-  background: none;
-  border: none;
+  background: transparent;
+  border:none;
   color: var(--text-main);
   padding: 6px 14px;
   border-radius: 20px;
@@ -76,9 +64,9 @@
   background: transparent;
   border: none;
   color: var(--primary-color);
-  letter-spacing: 3px;
-  font-weight: 800;
-  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  font-size: 17px;
   cursor: pointer;
   position: relative;
   padding: 5px 0;
@@ -101,80 +89,92 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  padding: 5px;
 }
 
-/* Responsive Logic */
-.mobileActions {
-  display: none;
-}
-
-.hamburger {
-  background: none;
-  border: none;
-  color: var(--text-main);
-  cursor: pointer;
-}
+.mobileActions { display: none; }
+.hamburger { background: none; border: none; color: var(--text-main); cursor: pointer; }
 
 @media (max-width: 900px) {
-  .desktopLinks, .desktopOnly {
-    display: none;
-  }
-  .mobileActions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
+  .desktopLinks, .desktopOnly { display: none; }
+  .mobileActions { display: flex; align-items: center; gap: 15px; }
 }
 
-/* Mobile Overlay Menu */
+/* --- Professional Glassy Mobile Menu --- */
+
+/* Dimming background */
+.menuBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1999;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .mobileOverlay {
   position: fixed;
   top: 0;
   right: 0;
-  width: 100%;
-  height: 100vh;
-  background: var(--bg-color);
+  width: 55%; /* Aligned to right, 75% width */
+  background: rgba(255, 255, 255, 0.7); /* Light Glass */
+  border-radius: 0 0 0 30px; /* Rounded left corners */
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
   z-index: 2000;
   transform: translateX(100%);
   display: flex;
   flex-direction: column;
-  padding: 30px;
+  padding: 40px;
+  box-shadow: -15px 0 50px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='dark'] .mobileOverlay {
+  background: rgba(15, 15, 15, 0.7); /* Dark Glass */
+  box-shadow: -15px 0 50px rgba(0, 0, 0, 0.5);
 }
 
 .overlayHeader {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 50px;
+  justify-content: flex-end; /* Push close button to the right */
+  margin-bottom: 40px;
 }
 
 .closeBtn {
   background: none;
   border: none;
   color: var(--text-main);
+  cursor: pointer;
 }
 
 .overlayLinks {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 35px;
 }
 
 .overlayLink {
   text-decoration: none;
   color: var(--text-main);
-  font-size: 24px;
-  font-weight: 800;
+  font-size: 22px;
+  font-weight: 900; /* Extra Bold like the reference */
+  letter-spacing: -0.5px;
+  transition: color 0.3s;
+}
+
+.overlayLink:hover {
+  color: var(--primary-color);
 }
 
 .mobileDownloadMain {
-  margin-top: 20px;
+  margin-top: 10px;
   background: var(--primary-color);
   color: white;
   border: none;
-  padding: 15px;
-  border-radius: 12px;
+  padding: 16px;
+  border-radius: 40px; /* Fully pill-shaped like image */
   font-weight: 800;
   font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(124, 62, 255, 0.2);
 }

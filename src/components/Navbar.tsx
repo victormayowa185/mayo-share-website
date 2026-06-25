@@ -17,28 +17,30 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
   
   const headerRef = useRef<HTMLElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
 
-  // Handle Scroll
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Entrance Animation (Desktop)
+  // Entrance Animation
   useEffect(() => {
     gsap.fromTo(headerRef.current, 
       { y: -100, opacity: 0 }, 
-      { y: 0, opacity: 1, duration: 1, ease: "expo.out" }
+      { y: 0, opacity: 1, duration: 1.2, ease: "expo.out" }
     );
   }, []);
 
-  // Mobile Menu Animation
+  // Mobile Menu & Backdrop Logic
   useEffect(() => {
     if (menuOpen) {
-      gsap.to(mobileMenuRef.current, { x: 0, duration: 0.5, ease: "expo.out" });
+      gsap.to(mobileMenuRef.current, { x: 0, opacity: 1, duration: 0.6, ease: "power4.out" });
+      gsap.to(backdropRef.current, { opacity: 1, pointerEvents: "auto", duration: 0.4 });
     } else {
-      gsap.to(mobileMenuRef.current, { x: "100%", duration: 0.5, ease: "expo.in" });
+      gsap.to(mobileMenuRef.current, { x: "100%", opacity: 0, duration: 0.5, ease: "power4.in" });
+      gsap.to(backdropRef.current, { opacity: 0, pointerEvents: "none", duration: 0.4 });
     }
   }, [menuOpen]);
 
@@ -53,44 +55,26 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
     <>
       <header className={`${styles.mainHeader} ${scrolled ? styles.isScrolled : ''}`} ref={headerRef}>
         <nav className={styles.navContainer}>
-          {/* LEFT: Logo */}
-          <Link to="/" className={styles.logoLink}>
-            <Logo />
-          </Link>
+          {/* Logo on the left */}
+          <Link to="/" className={styles.logoLink}><Logo /></Link>
 
-          {/* RIGHT: Desktop Nav */}
           <div className={styles.navRight}>
+            {/* Desktop Links */}
             <div className={styles.desktopLinks}>
               {menuItems.map((item) => (
-                <Link key={item.name} to={item.path} className={styles.navLink}>
-                  {item.name}
-                </Link>
+                <Link key={item.name} to={item.path} className={styles.navLink}>{item.name}</Link>
               ))}
-              
-              {/* Language Pill */}
-              <button className={styles.langPill}>
-                English <FaChevronDown size={10} />
-              </button>
-
-              <button className={styles.downloadBtn}>
-                DOWNLOAD
-                <div className={styles.btnUnderline}></div>
-              </button>
+              <button className={styles.langPill}>English <FaChevronDown size={10} /></button>
+              <button className={styles.downloadBtn}>DOWNLOAD<div className={styles.btnUnderline}></div></button>
             </div>
 
-            {/* Mobile Actions (Visible only on small screens) */}
+            {/* Mobile Actions: Order -> Theme -> Lang -> Menu */}
             <div className={styles.mobileActions}>
               <button className={styles.iconBtn} onClick={toggleTheme}>
                 {theme === 'light' ? <HiOutlineMoon size={22} /> : <HiOutlineSun size={22} />}
               </button>
-              
-              <button className={styles.langPillMobile}>
-                English <FaChevronDown size={10} />
-              </button>
-
-              <button className={styles.hamburger} onClick={() => setMenuOpen(true)}>
-                <HiMenu size={28} />
-              </button>
+              <button className={styles.langPillMobile}>English <FaChevronDown size={10} /></button>
+              <button className={styles.hamburger} onClick={() => setMenuOpen(true)}><HiMenu size={28} /></button>
             </div>
 
             {/* Desktop Theme Toggle */}
@@ -101,14 +85,17 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
         </nav>
       </header>
 
-      {/* Mobile Sidebar Overlay */}
+      {/* Dimmed Backdrop */}
+      <div className={styles.menuBackdrop} ref={backdropRef} onClick={() => setMenuOpen(false)} />
+
+      {/* Floating Glassy Mobile Menu (75% width) */}
       <div className={styles.mobileOverlay} ref={mobileMenuRef}>
         <div className={styles.overlayHeader}>
-          <Logo />
           <button className={styles.closeBtn} onClick={() => setMenuOpen(false)}>
-            <HiX size={30} />
+            <HiX size={32} />
           </button>
         </div>
+        
         <div className={styles.overlayLinks}>
           {menuItems.map((item) => (
             <Link key={item.name} to={item.path} className={styles.overlayLink} onClick={() => setMenuOpen(false)}>

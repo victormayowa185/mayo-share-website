@@ -1,0 +1,205 @@
+/* ── Hero ─────────────────────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 24px 80px;
+  text-align: center;
+}
+
+.heroHeading {
+  font-size: clamp(2.4rem, 7vw, 5.2rem);
+  font-weight: 800;
+  max-width: 860px;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  color: var(--text-main);
+  opacity: 0;
+}
+
+.heroAccent {
+  color: var(--primary-color);
+}
+
+.heroSub {
+  margin-top: 28px;
+  font-size: 1.2rem;
+  color: var(--text-sub);
+  max-width: 520px;
+  line-height: 1.7;
+  opacity: 0;
+}
+
+.ctaRow {
+  margin-top: 44px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  opacity: 0;
+}
+
+.ctaPrimary {
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  padding: 16px 36px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Mulish', sans-serif;
+  box-shadow: 0 8px 30px rgba(124, 62, 255, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ctaPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(124, 62, 255, 0.4);
+}
+
+.ctaSecondary {
+  background: transparent;
+  color: var(--text-main);
+  border: 2px solid rgba(124, 62, 255, 0.3);
+  padding: 16px 36px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Mulish', sans-serif;
+  transition: border-color 0.2s ease;
+}
+
+.ctaSecondary:hover {
+  border-color: var(--primary-color);
+}
+
+/* ── Features ─────────────────────────────────────────────────── */
+.features {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 100px 24px 160px;
+  overflow: hidden;
+}
+
+.featuresHeading {
+  text-align: center;
+  margin-bottom: 100px;
+}
+
+.featuresEyebrow {
+  color: var(--primary-color);
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.featuresTitle {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--text-main);
+  margin-top: 12px;
+  letter-spacing: -0.5px;
+}
+
+/* SVG zigzag track */
+.zigzagSvg {
+  position: absolute;
+  top: 200px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 200px);
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Flying plane */
+.plane {
+  position: absolute;
+  top: 200px;
+  left: 0;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+/* Cards zigzag layout */
+.cardsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  position: relative;
+  z-index: 2;
+}
+
+.cardRow {
+  display: flex;
+  justify-content: flex-start;
+  opacity: 0;
+}
+
+.cardRowRight {
+  justify-content: flex-end;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(124, 62, 255, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(124, 62, 255, 0.1);
+  border-radius: 24px;
+  padding: 36px 32px;
+  box-shadow: 0 8px 40px rgba(124, 62, 255, 0.06);
+}
+
+.cardIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(124, 62, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7C3EFF;
+  margin-bottom: 20px;
+}
+
+.cardTitle {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 12px;
+  letter-spacing: -0.3px;
+}
+
+.cardDesc {
+  color: var(--text-sub);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .cardRow,
+  .cardRowRight {
+    justify-content: center;
+  }
+
+  .zigzagSvg {
+    display: none;
+  }
+
+  .plane {
+    display: none;
+  }
+}

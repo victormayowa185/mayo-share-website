@@ -14,15 +14,15 @@
 
 .isScrolled {
   height: 70px;
-  background: rgba(var(--bg-rgb, 255, 255, 255), 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(var(--bg-rgb, 255, 255, 255), 0.45);
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
 
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 [data-theme='dark'] .isScrolled {
-  background: rgba(10, 10, 10, 0.7);
+  background: rgba(10, 10, 10, 0.01);
 }
 
 .navContainer {
@@ -117,7 +117,7 @@
   top: 0;
   right: 0;
   width: 55%; /* Aligned to right, 75% width */
-  background: rgba(255, 255, 255, 0.7); /* Light Glass */
+  background: rgba(255, 255, 255, 0.95); /* Light Glass */
   border-radius: 0 0 0 30px; /* Rounded left corners */
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);

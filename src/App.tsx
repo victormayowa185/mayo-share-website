@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import HomePage from './pages/Home';
+import Footer from './components/Footer';          // ← import Footer
 import './styles/theme.css';
 
 const App: React.FC = () => {
@@ -19,6 +20,7 @@ const App: React.FC = () => {
       <main>
         <HomePage />
       </main>
+      <Footer />  
     </div>
   );
 };

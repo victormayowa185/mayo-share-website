@@ -10,7 +10,7 @@
 }
 
 .heroHeading {
-  font-size: clamp(2.4rem, 7vw, 5.2rem);
+  font-size: 4rem;
   font-weight: 800;
   max-width: 860px;
   line-height: 1.1;
@@ -80,7 +80,7 @@
 /* ── Features ─────────────────────────────────────────────────── */
 .features {
   position: relative;
-  max-width: 1100px;
+  max-width: 850px;
   margin: 0 auto;
   padding: 100px 24px 160px;
   overflow: hidden;
@@ -128,7 +128,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  z-index: 1;
   pointer-events: none;
 }
 /* Cards zigzag layout */
@@ -152,13 +152,13 @@
 
 .card {
   width: 100%;
-  max-width: 420px;
+  max-width: 300px;
   background: rgba(124, 62, 255, 0.04);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(124, 62, 255, 0.1);
   border-radius: 24px;
-  padding: 36px 32px;
+  padding: 28px 24px;
   box-shadow: 0 8px 40px rgba(124, 62, 255, 0.06);
 }
 
@@ -202,4 +202,112 @@
   .plane {
     display: none;
   }
+}
+
+/* ── FAQ Section ──────────────────────────────────────────────── */
+.faqSection {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 60px 24px 20px;
+}
+
+.faqContainer {
+  width: 100%;
+}
+
+.faqHeading {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 48px;
+  letter-spacing: -0.5px;
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.faqSection {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 60px 24px 100px; /* Adjusted padding */
+}
+
+.faqItem {
+  position: relative;
+  /* Remove full border, add only left bar */
+  border-left: 4px solid var(--primary-color);
+  padding: 20px 0 20px 30px; 
+  margin-bottom: 24px;
+  background: transparent; /* Cleaner look without the box */
+  
+  /* This ensures the text looks like it slides out from the bar */
+  overflow: hidden; 
+}
+
+.faqContentWrapper {
+  /* This is what we will animate with GSAP */
+  display: flex;
+  flex-direction: column;
+}
+
+.faqQuestion {
+  font-size: 1.3rem; /* Slightly larger */
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  letter-spacing: -0.4px;
+}
+
+.faqAnswer {
+  font-size: 1.05rem;
+  color: var(--text-sub);
+  line-height: 1.6;
+  max-width: 700px;
+}
+
+.faqItem:hover {
+  border-color: rgba(124, 62, 255, 0.25);
+  box-shadow: 0 4px 20px rgba(124, 62, 255, 0.06);
+}
+
+.faqQuestion {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+
+.faqAnswer {
+  font-size: 1rem;
+  color: var(--text-sub);
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .faqSection {
+    padding: 40px 16px 80px;
+  }
+  .faqItem {
+    padding: 18px 20px;
+  }
+  .faqQuestion {
+    font-size: 1rem;
+  }
+  .faqAnswer {
+    font-size: 0.95rem;
+  }
+}
+
+/* Add this at the bottom of the file */
+.pageEndDivider {
+  margin: 20px auto 0 auto; 
+  border-top: 1px solid var(--text-main);
+  height: 70px; /* 28px (bottom) + 28px (footer height) */
+  width: 50%;
 }

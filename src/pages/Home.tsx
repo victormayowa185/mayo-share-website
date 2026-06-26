@@ -50,7 +50,7 @@ const HeroSection: React.FC = () => {
   return (
     <section className={styles.hero}>
       <h1 ref={headingRef} className={styles.heroHeading}>
-        A reliable way for{' '}
+        A more compatible way for{' '}
         <span className={styles.heroAccent}>file sharing</span>{' '}
         is here.
       </h1>
@@ -66,11 +66,9 @@ const HeroSection: React.FC = () => {
 };
 
 const FeaturesSection: React.FC = () => {
-
-
-
   const sectionRef = useRef<HTMLDivElement>(null);
   const planeRef = useRef<HTMLDivElement>(null);
+  const planeIconRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const lastScroll = useRef(0);
@@ -79,8 +77,41 @@ const FeaturesSection: React.FC = () => {
   useEffect(() => {
     const section = sectionRef.current;
     const plane = planeRef.current;
+    const icon = planeIconRef.current;
     const path = pathRef.current;
-    if (!section || !plane || !path) return;
+    if (!section || !plane || !path || !icon) return;
+
+    const ALIGN_OFFSET = 90;
+
+    gsap.to(plane, {
+      motionPath: {
+        path: path,
+        align: path,
+        autoRotate: ALIGN_OFFSET,
+        alignOrigin: [0.5, 0.5],
+      },
+      ease: 'none',
+      scrollTrigger: {
+        trigger: section,
+        start: 'top center',
+        end: 'bottom center',
+        scrub: 1.5,
+        onUpdate: () => {
+          const scrollY = window.scrollY;
+          const nowGoingDown = scrollY >= lastScroll.current;
+          lastScroll.current = scrollY;
+
+          if (nowGoingDown !== goingDown.current) {
+            goingDown.current = nowGoingDown;
+            gsap.to(icon, {
+              rotation: nowGoingDown ? 0 : 180,
+              duration: 0.3,
+              ease: 'power2.out',
+            });
+          }
+        },
+      },
+    });
 
     cardRefs.current.forEach((card) => {
       if (!card) return;
@@ -97,44 +128,11 @@ const FeaturesSection: React.FC = () => {
       );
     });
 
-    gsap.to(plane, {
-      motionPath: {
-        path: path,
-        align: path,
-        autoRotate: true,
-        alignOrigin: [0.5, 0.5],
-      },
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
-        start: 'top center',
-        end: 'bottom center',
-        scrub: 1.5,
-        onUpdate: (self) => {
-          const scrollY = window.scrollY;
-          const nowGoingDown = scrollY >= lastScroll.current;
-          lastScroll.current = scrollY;
-
-          // Only update when direction actually changes
-          if (nowGoingDown !== goingDown.current) {
-            goingDown.current = nowGoingDown;
-            // Flip the icon 180deg on Y axis so it always faces forward
-            gsap.to(plane, {
-              scaleX: nowGoingDown ? 1 : -1,
-              duration: 0.3,
-              ease: 'power2.out',
-            });
-          }
-        },
-      },
-    });
-
     return () => { ScrollTrigger.getAll().forEach(t => t.kill()); };
   }, []);
 
   return (
     <section ref={sectionRef} className={styles.features}>
-
       <div className={styles.featuresHeading}>
         <p className={styles.featuresEyebrow}>Why MAYO Share</p>
         <h2 className={styles.featuresTitle}>Built different.</h2>
@@ -142,12 +140,12 @@ const FeaturesSection: React.FC = () => {
 
       <svg
         className={styles.zigzagSvg}
-        viewBox="0 0 1100 1000"
+        viewBox="0 0 750 1000"
         preserveAspectRatio="none"
       >
         <path
           ref={pathRef}
-          d="M 220 80 C 300 80, 700 80, 880 300 C 1060 520, 300 520, 220 700 C 140 880, 700 880, 880 1000"
+          d="M 150 80 C 200 80, 480 80, 600 300 C 720 520, 200 520, 150 700 C 100 880, 480 880, 600 1000"
           fill="none"
           stroke="rgba(124, 62, 255, 0.12)"
           strokeWidth="2"
@@ -156,7 +154,9 @@ const FeaturesSection: React.FC = () => {
       </svg>
 
       <div ref={planeRef} className={styles.plane}>
-        <TbSend size={48} color="#7C3EFF" />
+        <div ref={planeIconRef} className={styles.planeInner}>
+          <TbSend size={60} color="#7C3EFF" />
+        </div>
       </div>
 
       <div className={styles.cardsWrapper}>
@@ -174,7 +174,90 @@ const FeaturesSection: React.FC = () => {
           </div>
         ))}
       </div>
+    </section>
+  );
+};
 
+// ---- Updated FAQ Section with left-bar slide-out animation ----
+const FAQSection: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const items = itemsRef.current.filter(el => el !== null);
+
+    items.forEach((item) => {
+      if (!item) return;
+
+      gsap.fromTo(item,
+        {
+          x: -100,   // start hidden behind the left bar
+          opacity: 0,
+        },
+        {
+          x: 0,      // slide to natural position
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 90%", // triggers when the item nears the viewport bottom
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach(t => t.kill());
+    };
+  }, []);
+
+  const faqs = [
+    {
+      q: 'Is it really free?',
+      a: 'Yes, MAYO Share is 100% free and open source. There are no ads, no tracking, and no hidden costs.'
+    },
+    {
+      q: 'Does it work over the internet?',
+      a: 'No. MAYO Share uses your local Wi‑Fi network. Your data never leaves your local network.'
+    },
+    {
+      q: 'Is it secure?',
+      a: 'Yes. All transfers are encrypted using HTTPS. You can also enable PIN verification for extra security.'
+    },
+    {
+      q: 'Where do files go?',
+      a: 'Files are saved to your device\'s Downloads folder by default, but you can change this in the settings.'
+    },
+    {
+      q: 'Which platforms are supported?',
+      a: 'MAYO Share is available for Windows, macOS, Linux, Android, and iOS.'
+    },
+    {
+      q: 'Do I need to create an account?',
+      a: 'No. MAYO Share does not require any account or login. Just install and start sharing.'
+    }
+  ];
+
+  return (
+    <section className={styles.faqSection} ref={containerRef}>
+      <div className={styles.faqContainer}>
+        <h2 className={styles.faqHeading}>Frequently Asked Questions</h2>
+        <div className={styles.faqList}>
+          {faqs.map((faq, i) => (
+            <div key={i} className={styles.faqItem}>
+              <div
+                ref={el => (itemsRef.current[i] = el)}
+                className={styles.faqContentWrapper}
+              >
+                <h3 className={styles.faqQuestion}>{faq.q}</h3>
+                <p className={styles.faqAnswer}>{faq.a}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 };
@@ -183,6 +266,8 @@ const HomePage: React.FC = () => (
   <>
     <HeroSection />
     <FeaturesSection />
+    <FAQSection />
+    <div className={styles.pageEndDivider} />
   </>
 );
 

@@ -1,0 +1,40 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 24px;
+  height: 28px;
+  background: transparent; /* Changed to transparent */
+  font-size: 0.75rem;
+  color: var(--text-main);
+  position: fixed;
+  bottom: 10px; /* Your specific floating height */
+  left: 0;
+  right: 0;
+  z-index: 40;
+  pointer-events: none; /* Allows clicking content behind if needed */
+}
+
+.left,
+.right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: auto; /* Re-enable clicks for buttons */
+}
+
+.linkBtn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+  font-family: inherit;
+}
+
+.linkBtn:hover {
+  color: var(--accent-hover);
+  text-decoration: none;
+}

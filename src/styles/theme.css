@@ -10,7 +10,16 @@
   --nav-bg: transparent;
   --nav-border: transparent;
   --nav-shadow: none;
-  
+
+  --transition-speed: 0.4s;
+  --apple-curve: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --bg-statusbar: rgba(255, 255, 255, 0.8);
+  --border: rgba(0, 0, 0, 0.1);
+  --text-muted: #86868b;
+  --accent: #7C3EFF;
+  --accent-hover: #5a2bcc;
+
   --transition-speed: 0.4s;
   --apple-curve: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -19,6 +28,7 @@
   --bg-color: #050505;
   --text-main: #f5f5f7;
   --text-sub: #a1a1a6;
+  --border: white;
 }
 
 * {

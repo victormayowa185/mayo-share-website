@@ -14,7 +14,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  
+
   const headerRef = useRef<HTMLElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -27,9 +27,15 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
 
   // Entrance Animation
   useEffect(() => {
-    gsap.fromTo(headerRef.current, 
-      { y: -100, opacity: 0 }, 
-      { y: 0, opacity: 1, duration: 1.2, ease: "expo.out" }
+    gsap.fromTo(headerRef.current,
+      { y: -120, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1.8,
+        delay: 1.4, // Starts last for the final "reveal"
+        ease: "back.out(1.2)" // The macOS "Settle" effect
+      }
     );
   }, []);
 
@@ -95,7 +101,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
             <HiX size={32} />
           </button>
         </div>
-        
+
         <div className={styles.overlayLinks}>
           {menuItems.map((item) => (
             <Link key={item.name} to={item.path} className={styles.overlayLink} onClick={() => setMenuOpen(false)}>

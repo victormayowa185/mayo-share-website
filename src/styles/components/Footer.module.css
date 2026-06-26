@@ -4,15 +4,20 @@
   align-items: center;
   padding: 6px 24px;
   height: 28px;
-  background: transparent; /* Changed to transparent */
+  background: transparent;
   font-size: 0.75rem;
   color: var(--text-main);
   position: fixed;
-  bottom: 10px; /* Your specific floating height */
+  bottom: 10px;
   left: 0;
   right: 0;
   z-index: 40;
-  pointer-events: none; /* Allows clicking content behind if needed */
+  pointer-events: none;
+
+  /* APPLE INITIAL STATE: Pre-hide it in CSS */
+  opacity: 0;
+  transform: translateY(50px);
+  will-change: transform, opacity;
 }
 
 .left,

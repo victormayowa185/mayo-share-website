@@ -4,31 +4,35 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { TbSend } from 'react-icons/tb';
 import { MdLock, MdWifiOff, MdSpeed, MdDevicesOther } from 'react-icons/md';
+import { ShieldCheckIcon } from '../components/icon/protection';
+import { WifiIcon } from '../components/icon/wifi';
 import styles from '../styles/pages/Home.module.css';
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
 const FEATURES = [
   {
-    side: 'left' as const,
+    id: 'secured',
     icon: <MdLock size={32} />,
     title: 'Secured',
     description: 'End-to-end encryption on every transfer. Your files go directly between devices — no cloud, no interception.',
+    animatedComponent: <ShieldCheckIcon size={72} loop={true} className={styles.animatedIconSvg} />,
   },
   {
-    side: 'right' as const,
+    id: 'no-internet',
     icon: <MdWifiOff size={32} />,
     title: 'No Internet Required',
     description: 'Works entirely on your local network. No Wi-Fi? We create a hotspot. Zero dependency on the cloud.',
+    animatedComponent: <WifiIcon size={72} loop={true} className={styles.animatedIconSvg} />,
   },
   {
-    side: 'left' as const,
+    id: 'fast',
     icon: <MdSpeed size={32} />,
     title: 'Blazing Fast',
     description: 'Transfer at full local network speeds — up to 1Gbps. Move entire folders in seconds, not minutes.',
   },
   {
-    side: 'right' as const,
+    id: 'cross',
     icon: <MdDevicesOther size={32} />,
     title: 'Cross Platform',
     description: 'macOS, Windows, Linux — all talking to each other seamlessly. One app, every device.',
@@ -40,12 +44,24 @@ const HeroSection: React.FC = () => {
   const subRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    tl.fromTo(headingRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.9 })
-      .fromTo(subRef.current, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7 }, '-=0.5')
-      .fromTo(ctaRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.4');
-  }, []);
+useEffect(() => {
+  const tl = gsap.timeline({ defaults: { ease: 'power4.out' } }); // Heavier ease
+  
+  tl.fromTo(headingRef.current, 
+    { opacity: 0, y: 60, filter: 'blur(10px)' }, 
+    { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.4, delay: 0.3 }
+  )
+  .fromTo(subRef.current, 
+    { opacity: 0, y: 30, filter: 'blur(5px)' }, 
+    { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.2 }, 
+    '-=1.0'
+  )
+  .fromTo(ctaRef.current, 
+    { opacity: 0, y: 20 }, 
+    { opacity: 1, y: 0, duration: 1 }, 
+    '-=0.8'
+  );
+}, []);
 
   return (
     <section className={styles.hero}>
@@ -121,7 +137,7 @@ const FeaturesSection: React.FC = () => {
           opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
           scrollTrigger: {
             trigger: card,
-            start: 'top 80%',
+            start: 'top 85%',
             toggleActions: 'play none none none',
           },
         }
@@ -138,11 +154,7 @@ const FeaturesSection: React.FC = () => {
         <h2 className={styles.featuresTitle}>Built different.</h2>
       </div>
 
-      <svg
-        className={styles.zigzagSvg}
-        viewBox="0 0 750 1000"
-        preserveAspectRatio="none"
-      >
+      <svg className={styles.zigzagSvg} viewBox="0 0 750 1000" preserveAspectRatio="none">
         <path
           ref={pathRef}
           d="M 150 80 C 200 80, 480 80, 600 300 C 720 520, 200 520, 150 700 C 100 880, 480 880, 600 1000"
@@ -160,25 +172,63 @@ const FeaturesSection: React.FC = () => {
       </div>
 
       <div className={styles.cardsWrapper}>
-        {FEATURES.map((feature, i) => (
-          <div
-            key={i}
-            ref={el => { cardRefs.current[i] = el; }}
-            className={`${styles.cardRow} ${feature.side === 'right' ? styles.cardRowRight : ''}`}
-          >
+        {/* ROW 1: Secured Text (Left) | Empty (Right) */}
+        <div className={styles.featureLevel}>
+          <div className={styles.leftCol} ref={el => cardRefs.current[0] = el}>
             <div className={styles.card}>
-              <div className={styles.cardIcon}>{feature.icon}</div>
-              <h3 className={styles.cardTitle}>{feature.title}</h3>
-              <p className={styles.cardDesc}>{feature.description}</p>
+              <div className={styles.cardIcon}>{FEATURES[0].icon}</div>
+              <h3 className={styles.cardTitle}>{FEATURES[0].title}</h3>
+              <p className={styles.cardDesc}>{FEATURES[0].description}</p>
             </div>
           </div>
-        ))}
+          <div className={styles.rightCol} />
+        </div>
+
+        {/* ROW 2: Shield Icon (Left) | No Internet Text (Right) */}
+        <div className={styles.featureLevel}>
+          <div className={styles.leftCol} ref={el => cardRefs.current[1] = el}>
+            <div className={styles.iconOnlyCard}>{FEATURES[0].animatedComponent}</div>
+          </div>
+          <div className={styles.rightCol} ref={el => cardRefs.current[2] = el}>
+            <div className={styles.card}>
+              <div className={styles.cardIcon}>{FEATURES[1].icon}</div>
+              <h3 className={styles.cardTitle}>{FEATURES[1].title}</h3>
+              <p className={styles.cardDesc}>{FEATURES[1].description}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* ROW 3: Blazing Fast Text (Left) | Wifi Icon (Right) */}
+        <div className={styles.featureLevel}>
+          <div className={styles.leftCol} ref={el => cardRefs.current[3] = el}>
+            <div className={styles.card}>
+              <div className={styles.cardIcon}>{FEATURES[2].icon}</div>
+              <h3 className={styles.cardTitle}>{FEATURES[2].title}</h3>
+              <p className={styles.cardDesc}>{FEATURES[2].description}</p>
+            </div>
+          </div>
+          <div className={styles.rightCol} ref={el => cardRefs.current[4] = el}>
+            <div className={styles.iconOnlyCard}>{FEATURES[1].animatedComponent}</div>
+          </div>
+        </div>
+
+        {/* ROW 4: Empty (Left) | Cross Platform Text (Right) */}
+        <div className={styles.featureLevel}>
+          <div className={styles.leftCol} />
+          <div className={styles.rightCol} ref={el => cardRefs.current[5] = el}>
+            <div className={styles.card}>
+              <div className={styles.cardIcon}>{FEATURES[3].icon}</div>
+              <h3 className={styles.cardTitle}>{FEATURES[3].title}</h3>
+              <p className={styles.cardDesc}>{FEATURES[3].description}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
 };
 
-// ---- Updated FAQ Section with left-bar slide-out animation ----
+// ---- UPDATED FAQ SECTION with scroll in/out animation ----
 const FAQSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -186,23 +236,24 @@ const FAQSection: React.FC = () => {
   useEffect(() => {
     const items = itemsRef.current.filter(el => el !== null);
 
-    items.forEach((item) => {
-      if (!item) return;
-
+    // Animate each FAQ item with stagger
+    items.forEach((item, index) => {
       gsap.fromTo(item,
         {
-          x: -100,   // start hidden behind the left bar
+          x: -80,        // start off to the left (behind the left border)
           opacity: 0,
         },
         {
-          x: 0,      // slide to natural position
+          x: 0,
           opacity: 1,
-          duration: 1,
-          ease: "power3.out",
+          duration: 0.8,
+          ease: "power3.out",   // Apple-style smooth ease
+          delay: index * 0.1,   // stagger effect
           scrollTrigger: {
             trigger: item,
-            start: "top 90%", // triggers when the item nears the viewport bottom
-            toggleActions: "play none none none",
+            start: "top 85%",   // starts when item enters viewport
+            toggleActions: "play reverse play reverse", // play on enter, reverse on leave
+            // This makes the animation reversible without page refresh
           },
         }
       );

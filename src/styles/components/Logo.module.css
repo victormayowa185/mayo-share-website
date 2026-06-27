@@ -6,7 +6,7 @@
 }
 
 .image {
-  height: 50px;
+  height: 40px;
   width: auto;
 }
 
@@ -18,14 +18,14 @@
 
 .mayo {
   font-weight: 600;
-  font-size: 25px;
+  font-size: 20px;
   letter-spacing: -0.2px;
   color: var(--text-main);
 }
 
 .share {
   font-weight: 800;
-  font-size: 25px;
+  font-size: 20px;
   color: var(--text-sub);
   letter-spacing: 1.2px;
   text-transform: uppercase;

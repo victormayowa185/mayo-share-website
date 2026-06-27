@@ -10,7 +10,7 @@
 }
 
 .heroHeading {
-  font-size: 4rem;
+  font-size: 3.5rem;
   font-weight: 800;
   max-width: 860px;
   line-height: 1.1;
@@ -67,7 +67,7 @@
 .ctaSecondary {
   background: transparent;
   color: var(--text-main);
-  border: 2px solid rgba(124, 62, 255, 0.3);
+  border: 2px solid  var(--primary-color);
   padding: 16px 36px;
   border-radius: 50px;
   font-size: 1rem;
@@ -78,7 +78,7 @@
 }
 
 .ctaSecondary:hover {
-  border-color: var(--primary-color);
+  border-color: rgba(124, 62, 255, 0.3) ;
 }
 
 /* ── Features ─────────────────────────────────────────────────── */
@@ -157,14 +157,21 @@
 
 .card {
   width: 100%;
-  max-width: 300px;
+  max-width: 380px;  /* slightly wider to fit icon + text */
   background: rgba(124, 62, 255, 0.04);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(124, 62, 255, 0.1);
   border-radius: 24px;
-  padding: 28px 24px;
+  padding: 20px 24px;
   box-shadow: 0 8px 40px rgba(124, 62, 255, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 0;  /* we'll control spacing via padding */
+}
+
+.cardLeft {
+  flex-shrink: 0;
+  padding-right: 16px;
 }
 
 .cardIcon {
@@ -176,21 +183,35 @@
   align-items: center;
   justify-content: center;
   color: #7C3EFF;
-  margin-bottom: 20px;
+  /* remove margin-bottom */
+}
+
+.cardDivider {
+  width: 2px;
+  height: 60px;
+  background: rgba(124, 62, 255, 0.2);
+  flex-shrink: 0;
+  margin: 0 16px;
+}
+
+.cardRight {
+  flex: 1;
+  min-width: 0; /* prevents overflow */
 }
 
 .cardTitle {
   font-size: 1.4rem;
   font-weight: 800;
   color: var(--text-main);
-  margin-bottom: 12px;
+  margin-bottom: 4px;  /* reduce gap */
   letter-spacing: -0.3px;
 }
 
 .cardDesc {
   color: var(--text-sub);
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: 0.95rem;  /* slightly smaller to fit */
+  line-height: 1.5;
+  margin: 0;
 }
 
 /* ── Responsive ───────────────────────────────────────────────── */

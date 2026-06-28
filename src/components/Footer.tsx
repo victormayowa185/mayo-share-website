@@ -37,12 +37,12 @@ const Footer: React.FC = () => {
       </div>
 
       <div className={styles.right}>
-        <span>Built by</span>
+        <span>A Product from </span>
         <button
           className={styles.linkBtn}
           onClick={() => openExternal(portfolioUrl)}
         >
-          VICTOR MAYOWA
+          MAYO X
         </button>
       </div>
     </footer>

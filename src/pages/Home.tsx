@@ -6,7 +6,6 @@ import { TbSend } from 'react-icons/tb';
 import { MdLock, MdWifiOff, MdSpeed, MdDevicesOther } from 'react-icons/md';
 import { ShieldCheckIcon } from '../components/icon/protection';
 import { WifiIcon } from '../components/icon/wifi';
-// 👇 Import SpeedIcon (we'll use it later)
 import { SpeedIcon } from '../components/icon/speed';
 import styles from '../styles/pages/Home.module.css';
 
@@ -18,26 +17,28 @@ const FEATURES = [
     icon: <ShieldCheckIcon size={52} loop={true} className={styles.animatedIconSvg} />,
     title: 'Secured',
     description: 'End-to-end encryption on every transfer. Your files go directly between devices — no cloud, no interception.',
+    isAnimated: true, // 👈 ADDED
   },
   {
     id: 'no-internet',
     icon: <WifiIcon size={52} loop={true} className={styles.animatedIconSvg} />,
     title: 'No Internet Required',
     description: 'Works entirely on your local network. No Wi-Fi? We create a hotspot. Zero dependency on the cloud.',
+    isAnimated: true, // 👈 ADDED
   },
   {
     id: 'fast',
-    // 👇 Keep static icon until you create the TSX file
-    icon: <MdSpeed size={32} />,
+    icon: <SpeedIcon size={52} loop={true} className={styles.animatedIconSvg} />,
     title: 'Blazing Fast',
     description: 'Transfer at full local network speeds — up to 1Gbps. Move entire folders in seconds, not minutes.',
+    isAnimated: false, // 👈 ADDED
   },
   {
     id: 'cross',
-    // 👇 Keep static icon until you create the TSX file
     icon: <MdDevicesOther size={32} />,
     title: 'Cross Platform',
     description: 'macOS, Windows, Linux — all talking to each other seamlessly. One app, every device.',
+    isAnimated: false, // 👈 ADDED
   },
 ];
 
@@ -147,7 +148,7 @@ const FeaturesSection: React.FC = () => {
       <svg className={styles.zigzagSvg} viewBox="0 0 750 1000" preserveAspectRatio="none">
         <path
           ref={pathRef}
-          d="M 150 80 C 200 80, 480 80, 600 300 C 720 520, 200 520, 150 700 C 100 880, 480 880, 600 1000"
+          d="M 150 140 C 200 140, 480 140, 600 300 C 720 460, 200 460, 150 700 C 100 880, 480 880, 600 1000" // 👈 FIXED: moved from y:80 to y:140
           fill="none"
           stroke="rgba(124, 62, 255, 0.12)"
           strokeWidth="2"
@@ -167,7 +168,9 @@ const FeaturesSection: React.FC = () => {
           <div className={styles.leftCol} ref={el => cardRefs.current[0] = el}>
             <div className={styles.card}>
               <div className={styles.cardLeft}>
-                <div className={styles.cardIcon}>{FEATURES[0].icon}</div>
+                <div className={`${styles.cardIcon} ${FEATURES[0].isAnimated ? styles.cardIconAnimated : ''}`}>
+                  {FEATURES[0].icon}
+                </div>
               </div>
               <div className={styles.cardDivider} />
               <div className={styles.cardRight}>
@@ -185,7 +188,9 @@ const FeaturesSection: React.FC = () => {
           <div className={styles.rightCol} ref={el => cardRefs.current[1] = el}>
             <div className={styles.card}>
               <div className={styles.cardLeft}>
-                <div className={styles.cardIcon}>{FEATURES[1].icon}</div>
+                <div className={`${styles.cardIcon} ${FEATURES[1].isAnimated ? styles.cardIconAnimated : ''}`}>
+                  {FEATURES[1].icon}
+                </div>
               </div>
               <div className={styles.cardDivider} />
               <div className={styles.cardRight}>
@@ -201,7 +206,9 @@ const FeaturesSection: React.FC = () => {
           <div className={styles.leftCol} ref={el => cardRefs.current[2] = el}>
             <div className={styles.card}>
               <div className={styles.cardLeft}>
-                <div className={styles.cardIcon}>{FEATURES[2].icon}</div>
+                <div className={`${styles.cardIcon} ${FEATURES[2].isAnimated ? styles.cardIconAnimated : ''}`}>
+                  {FEATURES[2].icon}
+                </div>
               </div>
               <div className={styles.cardDivider} />
               <div className={styles.cardRight}>
@@ -219,7 +226,9 @@ const FeaturesSection: React.FC = () => {
           <div className={styles.rightCol} ref={el => cardRefs.current[3] = el}>
             <div className={styles.card}>
               <div className={styles.cardLeft}>
-                <div className={styles.cardIcon}>{FEATURES[3].icon}</div>
+                <div className={`${styles.cardIcon} ${FEATURES[3].isAnimated ? styles.cardIconAnimated : ''}`}>
+                  {FEATURES[3].icon}
+                </div>
               </div>
               <div className={styles.cardDivider} />
               <div className={styles.cardRight}>
@@ -234,7 +243,6 @@ const FeaturesSection: React.FC = () => {
   );
 };
 
-// ---- FAQ Section (keep yours unchanged) ----
 const FAQSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);

@@ -17,16 +17,16 @@ interface SpeedIconProps extends HTMLAttributes<HTMLDivElement> {
 
 const PATH_VARIANTS: Variants = {
   normal: {
-    opacity: 1,
-    rotate: 0,
-    transition: { duration: 0.3 },
+    rotate: -45, // resting position (low speed)
+    transition: { duration: 0.5, ease: "easeInOut" },
   },
   animate: {
-    opacity: [0, 1],
-    rotate: [0, 360],
+    // revving pattern: left → right → settle → higher → return
+    rotate: [-25, 20, 20, 20, -45],
     transition: {
-      duration: 0.6,
-      ease: "linear",
+      duration: 1.5,
+      ease: "easeInOut",
+      times: [0, 0.3, 0.5, 0.8, 1],
     },
   },
 };
@@ -49,7 +49,7 @@ const SpeedIcon = forwardRef<SpeedIconHandle, SpeedIconProps>(
       if (loop) {
         const run = () => {
           controls.start("animate").then(() => {
-            timeoutRef.current = setTimeout(run, 1200);
+            timeoutRef.current = setTimeout(run, 1200); // delay between loops
           });
         };
         run();
@@ -91,12 +91,20 @@ const SpeedIcon = forwardRef<SpeedIconHandle, SpeedIconProps>(
           width={size}
           xmlns="http://www.w3.org/2000/svg"
         >
+          {/* Static speedometer background */}
           <path d="M3.34 19a10 10 0 1 1 17.32 0" />
-          <motion.path
+
+          {/* Animated needle group – pivot at the base (12,14) */}
+          <motion.g
             animate={controls}
-            d="m12 14 4-4"
+            initial="normal"
             variants={PATH_VARIANTS}
-          />
+            style={{
+              transformOrigin: '12px 14px', // needle base
+            }}
+          >
+            <path d="m12 14 4-4" />
+          </motion.g>
         </svg>
       </div>
     );

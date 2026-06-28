@@ -55,7 +55,7 @@ const ShieldCheckIcon = forwardRef<ShieldCheckIconHandle, ShieldCheckIconProps>(
       if (loop) {
         const run = () => {
           controls.start("animate").then(() => {
-            timeoutRef.current = setTimeout(run, 600);
+            timeoutRef.current = setTimeout(run, 2000);
           });
         };
         run();

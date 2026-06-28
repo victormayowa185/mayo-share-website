@@ -67,7 +67,7 @@
 .ctaSecondary {
   background: transparent;
   color: var(--text-main);
-  border: 2px solid  var(--primary-color);
+  border: 2px solid var(--primary-color);
   padding: 16px 36px;
   border-radius: 50px;
   font-size: 1rem;
@@ -78,7 +78,7 @@
 }
 
 .ctaSecondary:hover {
-  border-color: rgba(124, 62, 255, 0.3) ;
+  border-color: rgba(124, 62, 255, 0.3);
 }
 
 /* ── Features ─────────────────────────────────────────────────── */
@@ -86,7 +86,7 @@
   position: relative;
   max-width: 850px;
   margin: 0 auto;
-  padding: 100px 24px 160px;
+  padding: 1px 24px 160px;
   overflow: hidden;
 }
 
@@ -99,12 +99,12 @@
   color: var(--primary-color);
   font-weight: 700;
   letter-spacing: 2px;
-  font-size: 0.85rem;
+  font-size: 1.2rem;
   text-transform: uppercase;
 }
 
 .featuresTitle {
-  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-size: 3rem;
   font-weight: 800;
   color: var(--text-main);
   margin-top: 12px;
@@ -157,7 +157,8 @@
 
 .card {
   width: 100%;
-  max-width: 380px;  /* slightly wider to fit icon + text */
+  max-width: 380px;
+  /* slightly wider to fit icon + text */
   background: rgba(124, 62, 255, 0.04);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(124, 62, 255, 0.1);
@@ -166,7 +167,8 @@
   box-shadow: 0 8px 40px rgba(124, 62, 255, 0.06);
   display: flex;
   align-items: center;
-  gap: 0;  /* we'll control spacing via padding */
+  gap: 0;
+  /* we'll control spacing via padding */
 }
 
 .cardLeft {
@@ -200,20 +202,23 @@
 
 .cardRight {
   flex: 1;
-  min-width: 0; /* prevents overflow */
+  min-width: 0;
+  /* prevents overflow */
 }
 
 .cardTitle {
   font-size: 1.4rem;
   font-weight: 800;
   color: var(--text-main);
-  margin-bottom: 4px;  /* reduce gap */
+  margin-bottom: 4px;
+  /* reduce gap */
   letter-spacing: -0.3px;
 }
 
 .cardDesc {
   color: var(--text-sub);
-  font-size: 0.95rem;  /* slightly smaller to fit */
+  font-size: 0.95rem;
+  /* slightly smaller to fit */
   line-height: 1.5;
   margin: 0;
 }
@@ -341,15 +346,6 @@
   }
 }
 
-/* Add this at the bottom of the file */
-.pageEndDivider {
-  margin: 20px auto 0 auto;
-  border-top: 1px solid var(--text-main);
-  height: 70px;
-  /* 28px (bottom) + 28px (footer height) */
-  width: 50%;
-}
-
 .cardAnimatedIcon {
   margin-top: 20px;
   display: flex;
@@ -459,5 +455,142 @@
   .rightCol {
     width: 100%;
     justify-content: center;
+  }
+}
+
+
+/* ── Image Cards ──────────────────────────────────────────────── */
+.imageCard {
+  width: 100%;
+  max-width: 380px;
+  background: transparent;
+  border: 1px solid rgba(123, 62, 255, 0.25);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px;
+  overflow: hidden;
+}
+
+.cardImage {
+  width: 100%;
+  transform-origin: center;
+  height: auto;
+  transform: scale(1.19);
+  border-radius: 20px;
+  object-fit: cover;
+  display: block;
+}
+
+
+/* ── Image Cards (clickable) ── */
+.imageCard {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.imageCard:hover {
+  transform: scale(1.02);
+}
+
+/* ── Modal / Lightbox ── */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 40px;
+  cursor: zoom-out;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modalContent {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: default;
+}
+
+.modalImage {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 85vh;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  object-fit: contain;
+  animation: scaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modalClose {
+  position: absolute;
+  top: -51px;
+  right: 0;
+  background: white;
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: black;
+  transition: transform 0.2s ease;
+}
+
+.modalClose:hover {
+  transform: scale(1.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modalContent {
+    max-width: 95%;
+  }
+
+  .modalClose {
+    top: -60px;
+    right: 50%;
+    transform: translateX(50%);
+  }
+
+  .modalClose:hover {
+    transform: translateX(50%) scale(1.1);
   }
 }

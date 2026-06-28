@@ -19,7 +19,7 @@
 }
 
 .isScrolled {
-  height: 70px;
+  height: 50px;
  background: rgba(var(--bg-color-rgb, 255, 255, 255), 0.7); 
   backdrop-filter: blur(20px); /* Stronger blur for that premium macOS look */
   -webkit-backdrop-filter: blur(20px);

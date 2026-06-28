@@ -1,12 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { TbSend } from 'react-icons/tb';
 import { MdLock, MdWifiOff, MdSpeed, MdDevicesOther } from 'react-icons/md';
+import { HiX } from 'react-icons/hi'; // 👈 For the close button
 import { ShieldCheckIcon } from '../components/icon/protection';
 import { WifiIcon } from '../components/icon/wifi';
 import { SpeedIcon } from '../components/icon/speed';
+import lightImg1 from '../assets/images/light-img1.png';
+import darkImg1 from '../assets/images/dark-img1.png';
+import lightImg2 from '../assets/images/light-img2.png';
+import darkImg2 from '../assets/images/dark-img2.png';
 import styles from '../styles/pages/Home.module.css';
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
@@ -17,30 +22,51 @@ const FEATURES = [
     icon: <ShieldCheckIcon size={52} loop={true} className={styles.animatedIconSvg} />,
     title: 'Secured',
     description: 'End-to-end encryption on every transfer. Your files go directly between devices — no cloud, no interception.',
-    isAnimated: true, // 👈 ADDED
+    isAnimated: true,
   },
   {
     id: 'no-internet',
     icon: <WifiIcon size={52} loop={true} className={styles.animatedIconSvg} />,
     title: 'No Internet Required',
     description: 'Works entirely on your local network. No Wi-Fi? We create a hotspot. Zero dependency on the cloud.',
-    isAnimated: true, // 👈 ADDED
+    isAnimated: true,
   },
   {
     id: 'fast',
     icon: <SpeedIcon size={52} loop={true} className={styles.animatedIconSvg} />,
     title: 'Blazing Fast',
     description: 'Transfer at full local network speeds — up to 1Gbps. Move entire folders in seconds, not minutes.',
-    isAnimated: false, // 👈 ADDED
+    isAnimated: false,
   },
   {
     id: 'cross',
     icon: <MdDevicesOther size={32} />,
     title: 'Cross Platform',
     description: 'macOS, Windows, Linux — all talking to each other seamlessly. One app, every device.',
-    isAnimated: false, // 👈 ADDED
+    isAnimated: false,
   },
 ];
+
+// Helper to detect theme
+const useTheme = () => {
+  const [theme, setTheme] = useState(() => {
+    return document.documentElement.getAttribute('data-theme') || 'light';
+  });
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const newTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      setTheme(newTheme);
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  return theme;
+};
 
 const HeroSection: React.FC = () => {
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -80,6 +106,10 @@ const FeaturesSection: React.FC = () => {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const lastScroll = useRef(0);
   const goingDown = useRef(true);
+  const theme = useTheme();
+
+  // 👇 State for the lightbox modal
+  const [activeImg, setActiveImg] = useState<string | null>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -138,6 +168,9 @@ const FeaturesSection: React.FC = () => {
     return () => { ScrollTrigger.getAll().forEach(t => t.kill()); };
   }, []);
 
+  const img1 = theme === 'dark' ? darkImg1 : lightImg1;
+  const img2 = theme === 'dark' ? darkImg2 : lightImg2;
+
   return (
     <section ref={sectionRef} className={styles.features}>
       <div className={styles.featuresHeading}>
@@ -148,7 +181,7 @@ const FeaturesSection: React.FC = () => {
       <svg className={styles.zigzagSvg} viewBox="0 0 750 1000" preserveAspectRatio="none">
         <path
           ref={pathRef}
-          d="M 150 140 C 200 140, 480 140, 600 300 C 720 460, 200 460, 150 700 C 100 880, 480 880, 600 1000" // 👈 FIXED: moved from y:80 to y:140
+          d="M 150 140 C 200 140, 480 140, 600 300 C 720 460, 200 460, 150 700 C 100 880, 480 880, 600 1000"
           fill="none"
           stroke="rgba(124, 62, 255, 0.12)"
           strokeWidth="2"
@@ -182,10 +215,14 @@ const FeaturesSection: React.FC = () => {
           <div className={styles.rightCol} />
         </div>
 
-        {/* ROW 2: No Internet – Right */}
+        {/* ROW 2: Image (Left) | No Internet (Right) */}
         <div className={styles.featureLevel}>
-          <div className={styles.leftCol} />
-          <div className={styles.rightCol} ref={el => cardRefs.current[1] = el}>
+          <div className={styles.leftCol} ref={el => cardRefs.current[1] = el}>
+            <div className={styles.imageCard} onClick={() => setActiveImg(img1)}>
+              <img src={img1} alt="Feature illustration" className={styles.cardImage} />
+            </div>
+          </div>
+          <div className={styles.rightCol} ref={el => cardRefs.current[2] = el}>
             <div className={styles.card}>
               <div className={styles.cardLeft}>
                 <div className={`${styles.cardIcon} ${FEATURES[1].isAnimated ? styles.cardIconAnimated : ''}`}>
@@ -201,9 +238,9 @@ const FeaturesSection: React.FC = () => {
           </div>
         </div>
 
-        {/* ROW 3: Blazing Fast – Left */}
+        {/* ROW 3: Blazing Fast (Left) | Image (Right) */}
         <div className={styles.featureLevel}>
-          <div className={styles.leftCol} ref={el => cardRefs.current[2] = el}>
+          <div className={styles.leftCol} ref={el => cardRefs.current[3] = el}>
             <div className={styles.card}>
               <div className={styles.cardLeft}>
                 <div className={`${styles.cardIcon} ${FEATURES[2].isAnimated ? styles.cardIconAnimated : ''}`}>
@@ -217,13 +254,17 @@ const FeaturesSection: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className={styles.rightCol} />
+          <div className={styles.rightCol} ref={el => cardRefs.current[4] = el}>
+            <div className={styles.imageCard} onClick={() => setActiveImg(img2)}>
+              <img src={img2} alt="Feature illustration" className={styles.cardImage} />
+            </div>
+          </div>
         </div>
 
         {/* ROW 4: Cross Platform – Right */}
         <div className={styles.featureLevel}>
           <div className={styles.leftCol} />
-          <div className={styles.rightCol} ref={el => cardRefs.current[3] = el}>
+          <div className={styles.rightCol} ref={el => cardRefs.current[5] = el}>
             <div className={styles.card}>
               <div className={styles.cardLeft}>
                 <div className={`${styles.cardIcon} ${FEATURES[3].isAnimated ? styles.cardIconAnimated : ''}`}>
@@ -239,6 +280,18 @@ const FeaturesSection: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* ─── MODAL / LIGHTBOX ─── */}
+      {activeImg && (
+        <div className={styles.modalOverlay} onClick={() => setActiveImg(null)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.modalClose} onClick={() => setActiveImg(null)}>
+              <HiX size={32} />
+            </button>
+            <img src={activeImg} className={styles.modalImage} alt="Full view" />
+          </div>
+        </div>
+      )}
     </section>
   );
 };

@@ -13,8 +13,6 @@
   right: 0;
   z-index: 40;
   pointer-events: none;
-
-  /* APPLE INITIAL STATE: Pre-hide it in CSS */
   opacity: 0;
   transform: translateY(50px);
   will-change: transform, opacity;
@@ -25,7 +23,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  pointer-events: auto; /* Re-enable clicks for buttons */
+  pointer-events: auto;
 }
 
 .linkBtn {
@@ -42,4 +40,50 @@
 .linkBtn:hover {
   color: var(--accent-hover);
   text-decoration: none;
+}
+
+/* ── Mobile fix: make footer static ── */
+@media (max-width: 868px) {
+  .footer {
+    position: relative;      /* remove fixed positioning */
+    bottom: auto;
+    left: auto;
+    right: auto;
+    margin-top: 40px;        /* give some space above */
+    pointer-events: auto;    /* enable clicks on entire footer */
+  }
+}
+
+/* ── Very small screens: two columns side-by-side, each stacking vertically ── */
+@media (max-width: 520px) {
+  .footer {
+    flex-direction: row;              /* keep side-by-side */
+    justify-content: space-between;   /* left and right */
+    align-items: stretch;             /* stretch to same height */
+    height: auto;                     /* let height adjust */
+    padding: 8px 16px;
+    gap: 8px;
+  }
+
+  .left,
+  .right {
+    flex-direction: column;           /* stack content vertically */
+    align-items: flex-start;          /* left-align text (optional) */
+    gap: 2px;                         /* small gap between stacked items */
+    width: auto;                      /* let content determine width */
+    flex: 1;                          /* share space equally */
+  }
+
+  .linkBtn {
+    font-size: 0.7rem;
+    padding: 0;
+  }
+
+  /* Optional: centre both columns if you prefer */
+  .left {
+    align-items: flex-start;
+  }
+  .right {
+    align-items: flex-end;            /* right-align the right column */
+  }
 }

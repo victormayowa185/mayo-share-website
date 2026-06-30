@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import HomePage from './pages/Home';
-import Footer from './components/Footer';          // ← import Footer
+import GuidePage from './pages/Guide';
+import Footer from './components/Footer';
 import './styles/theme.css';
 
 const App: React.FC = () => {
@@ -18,9 +20,12 @@ const App: React.FC = () => {
     <div className="app-wrapper">
       <Navbar theme={theme} toggleTheme={toggleTheme} />
       <main>
-        <HomePage />
+        <Routes>  {/* 👈 WRAP with <Routes> */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/guide" element={<GuidePage />} />
+        </Routes>
       </main>
-      <Footer />  
+      <Footer />
     </div>
   );
 };

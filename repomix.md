@@ -83,58 +83,64 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from '../styles/pages/Guide.module.css';
 
-// Placeholder images (keeping them in case, but we won't use them)
-const step1Img = 'https://placehold.co/400x300/7C3EFF/FFFFFF?text=Step+1';
-const step2Img = 'https://placehold.co/400x300/7C3EFF/FFFFFF?text=Step+2';
-const step3Img = 'https://placehold.co/400x300/7C3EFF/FFFFFF?text=Step+3';
-const step4Img = 'https://placehold.co/400x300/7C3EFF/FFFFFF?text=Step+4';
-const step5Img = 'https://placehold.co/400x300/7C3EFF/FFFFFF?text=Step+5';
-
-const STEPS = [
-  { id: 1, title: 'Open the App' },
-  { id: 2, title: 'Choose Method' },
-  { id: 3, title: 'Connect' },
-  { id: 4, title: 'Select & Send' },
-  { id: 5, title: 'Done' },
-];
-
 const FULL_STEPS = [
-  { 
-    id: 1, 
-    title: 'Open the App', 
-    description: 'Launch MAYO Share on your phone. On your laptop, open your browser and go to share.mayo.app.' 
-  },
-  { 
-    id: 2, 
-    title: 'Choose Method', 
-    description: 'Tap Send on your phone. Choose Receiver Method (app-to-app) or Browser Method.' 
-  },
-  { 
-    id: 3, 
-    title: 'Connect', 
-    description: 'Scan the QR code on your laptop screen, or tap the device name.' 
-  },
-  { 
-    id: 4, 
-    title: 'Select & Send', 
-    description: 'Pick photos, videos, or documents. Hit Send – the transfer starts instantly.' 
-  },
-  { 
-    id: 5, 
-    title: 'Done', 
-    description: 'On the laptop, accept the transfer. Files land in your Downloads folder.' 
-  },
+  { id: 1, title: 'Open the App', description: 'Launch MAYO Share on your phone. On your laptop, open your browser and go to share.mayo.app.' },
+  { id: 2, title: 'Choose Method', description: 'Tap Send on your phone. Choose Receiver Method (app-to-app) or Browser Method.' },
+  { id: 3, title: 'Connect', description: 'Scan the QR code on your laptop screen, or tap the device name.' },
+  { id: 4, title: 'Select & Send', description: 'Pick photos, videos, or documents. Hit Send – the transfer starts instantly.' },
+  { id: 5, title: 'Done', description: 'On the laptop, accept the transfer. Files land in your Downloads folder.' },
 ];
 
 gsap.registerPlugin(ScrollTrigger);
 
 const GuidePage: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    gsap.fromTo(headerRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8 });
-    return () => ScrollTrigger.getAll().forEach(t => t.kill());
+    const ctx = gsap.context(() => {
+      // 1. Header Entrance (Badge, then Title)
+      gsap.fromTo(".animate-header > *", 
+        { opacity: 0, y: 30 },
+        { 
+          opacity: 1, 
+          y: 0, 
+          duration: 1.2, 
+          stagger: 0.2, 
+          ease: "power4.out",
+          delay: 0.2 
+        }
+      );
+
+      // 2. Sidebar Slide-in
+      gsap.fromTo(sidebarRef.current,
+        { opacity: 0, x: 40 },
+        { opacity: 1, x: 0, duration: 1.5, ease: "power4.out", delay: 0.5 }
+      );
+
+      // 3. Card Revel (as you scroll)
+      stepRefs.current.forEach((step, index) => {
+        if (!step) return;
+        gsap.fromTo(step,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "back.out(1.2)", // The Apple "Settle" effect
+            scrollTrigger: {
+              trigger: step,
+              start: "top 88%", // Triggers when the card is near bottom of screen
+              toggleActions: "play none none none"
+            }
+          }
+        );
+      });
+    }, containerRef);
+
+    return () => ctx.revert(); // Cleanup on unmount
   }, []);
 
   const scrollToStep = (index: number) => {
@@ -143,12 +149,12 @@ const GuidePage: React.FC = () => {
   };
 
   return (
-    <div className={styles.guidePage}>
+    <div className={styles.guidePage} ref={containerRef}>
       <div className={styles.guideContainer}>
         
         {/* ─── LEFT COLUMN ─── */}
         <div className={styles.mainContent}>
-          <div className={styles.guideHeader} ref={headerRef}>
+          <div className={`${styles.guideHeader} animate-header`} ref={headerRef}>
             <span className={styles.guideBadge}>Guide</span>
             <h1 className={styles.guideTitle}>Share files in <span className={styles.guideAccent}>5 simple steps</span></h1>
           </div>
@@ -158,7 +164,7 @@ const GuidePage: React.FC = () => {
               <div 
                 key={step.id} 
                 className={styles.stepCard} 
-                ref={el => { stepRefs.current[index] = el; }}  // 👈 FIXED: returns void
+                ref={el => { stepRefs.current[index] = el; }}
               >
                 <div className={styles.stepContent}>
                   <h3 className={styles.stepTitle}>{step.title}</h3>
@@ -171,11 +177,11 @@ const GuidePage: React.FC = () => {
         </div>
 
         {/* ─── RIGHT COLUMN ─── */}
-        <div className={styles.sidebar}>
+        <div className={styles.sidebar} ref={sidebarRef}>
           <div className={styles.jumpCard}>
             <div className={styles.jumpNavTitle}>Jump to Step</div>
             <div className={styles.jumpList}>
-              {STEPS.map((step, index) => (
+              {FULL_STEPS.map((step, index) => (
                 <div key={step.id} className={styles.jumpItem} onClick={() => scrollToStep(index)}>
                   <span className={styles.jumpItemNumber}>0{step.id}</span>
                   <span className={styles.jumpItemText}>{step.title}</span>
@@ -200,39 +206,41 @@ export default GuidePage;
 
 <file path="src/styles/pages/Guide.module.css">
 .guidePage {
-  padding: 120px 24px 80px;
+  padding: 140px 24px 80px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .guideContainer {
   display: flex;
-  gap: 32px;
+  gap: 40px;
   align-items: flex-start;
 }
 
 .mainContent {
-  flex: 0 0 70%;
+  flex: 0 0 68%;
 }
 
 /* ── Sidebar ── */
 .sidebar {
-  flex: 0 0 30%;
+  flex: 0 0 32%;
   position: sticky;
-  top: 100px;
+  top: 120px;
   display: flex;
   flex-direction: column;
   gap: 30px;
+  opacity: 0; /* Handled by GSAP */
 }
 
 /* ── Jump To Step Container ── */
 .jumpCard {
-  background: #ffffff;
+  background: var(--bg-color);
   border: 1px solid rgba(124, 62, 255, 0.1);
-  border-radius: 12px;
+  border-radius: 16px;
   position: relative;
-  padding-top: 45px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  padding-top: 48px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
 }
 
 [data-theme='dark'] .jumpCard {
@@ -246,38 +254,30 @@ export default GuidePage;
   left: 0;
   background: var(--primary-color);
   color: #fff;
-  padding: 4px 20px;
-  font-size: 1rem;
+  padding: 8px 20px;
+  font-size: 0.9rem;
   font-weight: 700;
-  border-radius: 10px 0 12px 0;
-  box-shadow: 0 4px 12px rgba(124, 62, 255, 0.2);
-}
-
-.jumpList {
-  display: flex;
-  flex-direction: column;
+  border-radius: 0 0 12px 0;
+  box-shadow: 4px 4px 15px rgba(124, 62, 255, 0.2);
 }
 
 .jumpItem {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 20px;
+  padding: 16px 20px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
   border-bottom: 1px solid rgba(124, 62, 255, 0.05);
 }
 
-.jumpItem:last-child {
-  border-bottom: none;
-}
-
 .jumpItem:hover {
-  background: rgba(124, 62, 255, 0.05);
+  background: rgba(124, 62, 255, 0.04);
+  padding-left: 25px; /* Subtle slide effect on hover */
 }
 
 .jumpItemNumber {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 800;
   color: var(--primary-color);
   background: rgba(124, 62, 255, 0.1);
@@ -289,157 +289,95 @@ export default GuidePage;
   justify-content: center;
 }
 
-.jumpItemText {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text-main);
-}
-
-/* ── Guide Header ── */
-.guideHeader {
-  margin-bottom: 40px;
-}
-
-.guideBadge {
-  display: inline-block;
-  background: rgba(124, 62, 255, 0.1);
-  color: var(--primary-color);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 4px 14px;
-  border-radius: 20px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 12px;
-}
-
-.guideTitle {
-  font-size: 2.8rem;
-  font-weight: 800;
-  color: var(--text-main);
-  letter-spacing: -1px;
-  line-height: 1.1;
-}
-
-.guideAccent {
-  color: var(--primary-color);
-}
-
-/* ── Step Cards (FAQ Style) ── */
+/* ── Step Cards (Apple Style Reveal) ── */
 .stepsWrapper {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
 
 .stepCard {
   position: relative;
   border-left: 4px solid var(--primary-color);
-  padding: 16px 0 16px 24px;
-  background: transparent;
-  transition: border-color 0.2s;
-  opacity: 1; /* 👈 FIXED: was 0, now 1 so you can see the cards */
+  padding: 24px 0 24px 32px;
+  background: rgba(124, 62, 255, 0.02);
+  border-radius: 0 20px 20px 0;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  opacity: 0; /* GSAP will animate this to 1 */
+  will-change: transform, opacity;
 }
 
 .stepCard:hover {
-  border-color: rgba(124, 62, 255, 0.25);
+  border-left-width: 8px;
+  background: rgba(124, 62, 255, 0.05);
+  transform: translateX(10px); /* Smooth slide on hover */
 }
 
 .stepContent {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 4px;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .stepTitle {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 800;
   color: var(--text-main);
-  letter-spacing: -0.4px;
-  margin: 0;
+  letter-spacing: -0.5px;
 }
 
 .stepNumber {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-sub);
-  opacity: 0.4;
-  flex-shrink: 0;
-  margin-left: 16px;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--primary-color);
+  opacity: 0.08; /* Large ghost number behind */
+  position: absolute;
+  right: 20px;
+  top: 10px;
 }
 
 .stepDescription {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: var(--text-sub);
   line-height: 1.6;
-  margin: 0;
-  max-width: 700px;
+  max-width: 600px;
 }
 
-/* ── Sidebar Card ── */
+/* ── Typography ── */
+.guideBadge {
+  display: inline-block;
+  background: rgba(124, 62, 255, 0.1);
+  color: var(--primary-color);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 5px 16px;
+  border-radius: 30px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
+.guideTitle {
+  font-size: 3.2rem;
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1.1;
+  margin-bottom: 50px;
+}
+
+.guideAccent { color: var(--primary-color); }
+
 .sidebarCard {
   padding: 24px;
   background: rgba(124, 62, 255, 0.04);
-  border-radius: 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(124, 62, 255, 0.08);
 }
 
-.sidebarCard h4 {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-main);
-  margin-bottom: 8px;
-  letter-spacing: -0.3px;
-}
-
-.sidebarCard p {
-  font-size: 0.9rem;
-  color: var(--text-sub);
-  line-height: 1.6;
-  margin: 0;
-}
-
-/* ── Responsive ── */
 @media (max-width: 900px) {
-  .guideContainer {
-    flex-direction: column;
-  }
-  .mainContent,
-  .sidebar {
-    flex: 0 0 100%;
-    width: 100%;
-  }
-}
-
-@media (max-width: 600px) {
-  .guidePage {
-    padding: 100px 16px 60px;
-  }
-
-  .guideTitle {
-    font-size: 2rem;
-  }
-
-  .stepCard {
-    padding: 12px 0 12px 16px;
-  }
-
-  .stepTitle {
-    font-size: 1.1rem;
-  }
-
-  .stepNumber {
-    font-size: 0.95rem;
-  }
-
-  .stepDescription {
-    font-size: 0.95rem;
-  }
-
-  .sidebar {
-    position: relative;
-    top: auto;
-  }
+  .guideContainer { flex-direction: column; }
+  .mainContent, .sidebar { flex: 0 0 100%; width: 100%; }
+  .guideTitle { font-size: 2.2rem; }
 }
 </file>
 

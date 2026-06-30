@@ -3,58 +3,64 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from '../styles/pages/Guide.module.css';
 
-// Placeholder images (keeping them in case, but we won't use them)
-const step1Img = 'https://placehold.co/400x300/7C3EFF/FFFFFF?text=Step+1';
-const step2Img = 'https://placehold.co/400x300/7C3EFF/FFFFFF?text=Step+2';
-const step3Img = 'https://placehold.co/400x300/7C3EFF/FFFFFF?text=Step+3';
-const step4Img = 'https://placehold.co/400x300/7C3EFF/FFFFFF?text=Step+4';
-const step5Img = 'https://placehold.co/400x300/7C3EFF/FFFFFF?text=Step+5';
-
-const STEPS = [
-  { id: 1, title: 'Open the App' },
-  { id: 2, title: 'Choose Method' },
-  { id: 3, title: 'Connect' },
-  { id: 4, title: 'Select & Send' },
-  { id: 5, title: 'Done' },
-];
-
 const FULL_STEPS = [
-  { 
-    id: 1, 
-    title: 'Open the App', 
-    description: 'Launch MAYO Share on your phone. On your laptop, open your browser and go to share.mayo.app.' 
-  },
-  { 
-    id: 2, 
-    title: 'Choose Method', 
-    description: 'Tap Send on your phone. Choose Receiver Method (app-to-app) or Browser Method.' 
-  },
-  { 
-    id: 3, 
-    title: 'Connect', 
-    description: 'Scan the QR code on your laptop screen, or tap the device name.' 
-  },
-  { 
-    id: 4, 
-    title: 'Select & Send', 
-    description: 'Pick photos, videos, or documents. Hit Send – the transfer starts instantly.' 
-  },
-  { 
-    id: 5, 
-    title: 'Done', 
-    description: 'On the laptop, accept the transfer. Files land in your Downloads folder.' 
-  },
+  { id: 1, title: 'Open the App', description: 'Launch MAYO Share on your phone. On your laptop, open your browser and go to share.mayo.app.' },
+  { id: 2, title: 'Choose Method', description: 'Tap Send on your phone. Choose Receiver Method (app-to-app) or Browser Method.' },
+  { id: 3, title: 'Connect', description: 'Scan the QR code on your laptop screen, or tap the device name.' },
+  { id: 4, title: 'Select & Send', description: 'Pick photos, videos, or documents. Hit Send – the transfer starts instantly.' },
+  { id: 5, title: 'Done', description: 'On the laptop, accept the transfer. Files land in your Downloads folder.' },
 ];
 
 gsap.registerPlugin(ScrollTrigger);
 
 const GuidePage: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    gsap.fromTo(headerRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8 });
-    return () => ScrollTrigger.getAll().forEach(t => t.kill());
+    const ctx = gsap.context(() => {
+      // 1. Header Entrance (Badge, then Title)
+      gsap.fromTo(".animate-header > *", 
+        { opacity: 0, y: 30 },
+        { 
+          opacity: 1, 
+          y: 0, 
+          duration: 1.2, 
+          stagger: 0.2, 
+          ease: "power4.out",
+          delay: 0.2 
+        }
+      );
+
+      // 2. Sidebar Slide-in
+      gsap.fromTo(sidebarRef.current,
+        { opacity: 0, x: 40 },
+        { opacity: 1, x: 0, duration: 1.5, ease: "power4.out", delay: 0.5 }
+      );
+
+      // 3. Card Revel (as you scroll)
+      stepRefs.current.forEach((step, index) => {
+        if (!step) return;
+        gsap.fromTo(step,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "back.out(1.2)", // The Apple "Settle" effect
+            scrollTrigger: {
+              trigger: step,
+              start: "top 88%", // Triggers when the card is near bottom of screen
+              toggleActions: "play none none none"
+            }
+          }
+        );
+      });
+    }, containerRef);
+
+    return () => ctx.revert(); // Cleanup on unmount
   }, []);
 
   const scrollToStep = (index: number) => {
@@ -63,12 +69,12 @@ const GuidePage: React.FC = () => {
   };
 
   return (
-    <div className={styles.guidePage}>
+    <div className={styles.guidePage} ref={containerRef}>
       <div className={styles.guideContainer}>
         
         {/* ─── LEFT COLUMN ─── */}
         <div className={styles.mainContent}>
-          <div className={styles.guideHeader} ref={headerRef}>
+          <div className={`${styles.guideHeader} animate-header`} ref={headerRef}>
             <span className={styles.guideBadge}>Guide</span>
             <h1 className={styles.guideTitle}>Share files in <span className={styles.guideAccent}>5 simple steps</span></h1>
           </div>
@@ -78,7 +84,7 @@ const GuidePage: React.FC = () => {
               <div 
                 key={step.id} 
                 className={styles.stepCard} 
-                ref={el => { stepRefs.current[index] = el; }}  // 👈 FIXED: returns void
+                ref={el => { stepRefs.current[index] = el; }}
               >
                 <div className={styles.stepContent}>
                   <h3 className={styles.stepTitle}>{step.title}</h3>
@@ -91,11 +97,11 @@ const GuidePage: React.FC = () => {
         </div>
 
         {/* ─── RIGHT COLUMN ─── */}
-        <div className={styles.sidebar}>
+        <div className={styles.sidebar} ref={sidebarRef}>
           <div className={styles.jumpCard}>
             <div className={styles.jumpNavTitle}>Jump to Step</div>
             <div className={styles.jumpList}>
-              {STEPS.map((step, index) => (
+              {FULL_STEPS.map((step, index) => (
                 <div key={step.id} className={styles.jumpItem} onClick={() => scrollToStep(index)}>
                   <span className={styles.jumpItemNumber}>0{step.id}</span>
                   <span className={styles.jumpItemText}>{step.title}</span>
